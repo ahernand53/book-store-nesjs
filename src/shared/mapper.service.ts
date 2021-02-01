@@ -25,12 +25,12 @@ export class MapperService extends TypeMapper {
         (dto) => dto.email,
       )
       .map(
-        (entity) => entity.details,
-        (dto) => dto.details,
-      )
-      .map(
         (entity) => entity.roles,
         (dto) => dto.roles,
       );
+    // .map(
+    //   (entity) => entity.details,
+    //   (dto) => dto.details,
+    // )
   }
 }

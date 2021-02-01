@@ -15,6 +15,6 @@ export class UserDto {
   // @IsNotEmpty()
   // details: UserDetails;
 
-  // @IsNotEmpty()
-  // roles: RoleType;
+  @IsNotEmpty()
+  roles: RoleType;
 }
