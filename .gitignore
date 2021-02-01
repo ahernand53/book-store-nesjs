@@ -35,3 +35,5 @@ lerna-debug.log*
 
 # Personal file
 orm.config.json
+
+/tmp
