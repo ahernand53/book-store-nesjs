@@ -3,7 +3,7 @@ import { IsNumber, IsString, MaxLength } from 'class-validator';
 
 @Exclude()
 export class ReadRoleDto {
-  @Expose({ name: 'identificator' })
+  @Expose()
   @IsNumber()
   readonly id: number;
 
