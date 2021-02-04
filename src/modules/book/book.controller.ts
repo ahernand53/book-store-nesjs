@@ -46,7 +46,7 @@ export class BookController {
     return this._bookService.create(book);
   }
 
-  @Post()
+  @Post('/me')
   @Roles(RoleType.AUTHOR)
   @UseGuards(AuthGuard(), RoleGuard)
   createBookByAuthor(
