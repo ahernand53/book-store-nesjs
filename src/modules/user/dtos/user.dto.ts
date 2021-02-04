@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { RoleType } from '../../../modules/role/roletype.enum';
+import { RoleType } from '../../role/roletype.enum';
 import { UserDetails } from '../user.details.entity';
 
 export class UserDto {
