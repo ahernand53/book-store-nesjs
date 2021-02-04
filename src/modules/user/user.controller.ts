@@ -11,14 +11,17 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
-import { UserDto } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../role/decorators/role.decorator';
+import { RoleGuard } from '../role/guards/role.guard';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':id')
+  @Roles('ADMIN', 'AUTHOR')
+  @UseGuards(AuthGuard, RoleGuard)
   async getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return await this._userService.get(id);
   }
@@ -45,5 +48,12 @@ export class UserController {
   @Delete(':id')
   async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this._userService.delete(id);
+  }
+
+  @Post('/setRole')
+  async setRoleToUser(
+    @Body() { userId, roleId }: { userId: number; roleId: number },
+  ) {
+    return await this._userService.setRoleToUser(userId, roleId);
   }
 }
