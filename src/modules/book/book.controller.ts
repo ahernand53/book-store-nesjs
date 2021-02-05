@@ -17,8 +17,10 @@ import { RoleType } from '../role/roletype.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RoleGuard } from '../role/guards/role.guard';
 import { GetUser } from '../auth/user.decorator';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Controller('book')
+@ApiTags('Book Endpoints')
+@Controller('books')
 export class BookController {
   constructor(private readonly _bookService: BookService) {}
 
@@ -29,7 +31,7 @@ export class BookController {
 
   @Get('/author/:authId')
   getBooksByAuthor(
-    @Param('authId', ParseIntPipe) authId,
+    @Param('authId', ParseIntPipe) authId: number,
   ): Promise<ReadBookDto[]> {
     return this._bookService.getBookByAuthor(authId);
   }
@@ -42,29 +44,35 @@ export class BookController {
   @Post()
   @Roles(RoleType.AUTHOR)
   @UseGuards(AuthGuard(), RoleGuard)
-  createBook(@Body() book: Partial<CreateBookDto>): Promise<ReadBookDto> {
+  createBook(@Body() book: CreateBookDto): Promise<ReadBookDto> {
     return this._bookService.create(book);
   }
 
-  @Post('/me')
+  @Post('/own')
+  @ApiBearerAuth('swagger')
   @Roles(RoleType.AUTHOR)
   @UseGuards(AuthGuard(), RoleGuard)
   createBookByAuthor(
-    @Body() book: Partial<CreateBookDto>,
+    @Body() book: CreateBookDto,
     @GetUser('id') authorId: number,
   ): Promise<ReadBookDto> {
     return this._bookService.createByAuthor(authorId, book);
   }
 
   @Patch(':bookId')
+  @Roles(RoleType.AUTHOR)
+  @UseGuards(AuthGuard(), RoleGuard)
+  @ApiBearerAuth('swagger')
   updateBook(
     @Param('bookId') bookId: number,
-    @Body() book: Partial<UpdateBookDto>,
+    @Body() book: UpdateBookDto,
     @GetUser('id') authorId: number,
   ): Promise<ReadBookDto> {
     return this._bookService.update(authorId, bookId, book);
   }
 
+  @UseGuards(AuthGuard())
+  @ApiBearerAuth('swagger')
   @Delete(':bookId')
   deleteBook(@Param('bookId') bookId: number): Promise<void> {
     return this._bookService.delete(bookId);

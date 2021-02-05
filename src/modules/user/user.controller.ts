@@ -15,8 +15,11 @@ import { Roles } from '../role/decorators/role.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
 import { RoleType } from '../role/roletype.enum';
 import { ReadUserDto, UpdateUserDto } from './dtos';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('User Endpoints')
 @Controller('users')
+@ApiBearerAuth('swagger')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
 
@@ -46,9 +49,10 @@ export class UserController {
     await this._userService.delete(id);
   }
 
-  @Post('/setRole')
+  @Post('/setRole/:userId/:roleId')
   setRoleToUser(
-    @Body() { userId, roleId }: { userId: number; roleId: number },
+    @Param('roleId') roleId: number,
+    @Param('userId') userId: number,
   ): Promise<boolean> {
     return this._userService.setRoleToUser(userId, roleId);
   }
